@@ -10,7 +10,7 @@ namespace ProjectManagerEntity
     {
         public int TaskId { get; set; }
         public string TaskName { get; set; }
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
         public string ParentName { get; set; }
         public int Priority { get; set; }
         public string StartDate { get; set; }
