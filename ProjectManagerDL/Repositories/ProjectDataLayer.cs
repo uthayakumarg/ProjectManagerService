@@ -2,6 +2,7 @@
 using ProjectManagerEntity;
 using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
+using System.Globalization;
 using System.Linq;
 
 namespace ProjectManagerDL
@@ -31,19 +32,30 @@ namespace ProjectManagerDL
         {
             var projects = (from proj in _db.T_PROJ
                             join usr in _db.T_USR on proj.PROJ_MGR_ID equals usr.EMP_ID
-                            select new ProjectEntity
+                            select new
                             {
                                 ProjectId = proj.PROJ_ID,
                                 ProjectName = proj.PROJ_NM,
-                                StartDate = (proj.PROJ_STRT_DT != null ? 
-                                    SqlFunctions.DateName("day", proj.PROJ_STRT_DT) + "/" + SqlFunctions.DateName("month", proj.PROJ_STRT_DT) + "/" + SqlFunctions.DateName("year", proj.PROJ_STRT_DT) : ""),
-                                EndDate = (proj.PROJ_END_DT != null ?
-                                    SqlFunctions.DateName("day", proj.PROJ_END_DT) + "/" + SqlFunctions.DateName("month", proj.PROJ_END_DT) + "/" + SqlFunctions.DateName("year", proj.PROJ_END_DT) : ""),
+                                StartDate = proj.PROJ_STRT_DT,
+                                EndDate = proj.PROJ_END_DT,
                                 Priority = proj.PROJ_PRIORITY,
                                 ProjectManagerId = proj.PROJ_MGR_ID,
                                 ProjectManagerFullName = usr.EMP_FRST_NM + " " + usr.EMP_LST_NM,
                                 TasksCount = (from t in _db.T_TASK where t.PROJ_ID == proj.PROJ_ID select t).Count(),
                                 Completed = (from tsk in _db.T_TASK where tsk.PROJ_ID == proj.PROJ_ID && tsk.STATUS == "C" select tsk).Count()
+                            })
+                            .ToList()
+                            .Select(x => new ProjectEntity
+                            {
+                                ProjectId = x.ProjectId,
+                                ProjectName = x.ProjectName,
+                                StartDate = x.StartDate.HasValue ? x.StartDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) : string.Empty,
+                                EndDate = x.EndDate.HasValue ? x.EndDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) : string.Empty,
+                                Priority = x.Priority,
+                                ProjectManagerId = x.ProjectManagerId,
+                                ProjectManagerFullName = x.ProjectManagerFullName,
+                                TasksCount = x.TasksCount,
+                                Completed = x.Completed
                             }).ToList();
 
             return projects;

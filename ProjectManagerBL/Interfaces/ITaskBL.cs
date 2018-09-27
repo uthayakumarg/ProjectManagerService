@@ -1,9 +1,9 @@
 ﻿using ProjectManagerEntity;
 using System.Collections.Generic;
 
-namespace ProjectManagerDL
+namespace ProjectManagerBL
 {
-    public interface ITaskDataLayer
+    public interface ITaskBL
     {
         List<ParentTaskEntity> GetParentTasks();
         void AddParentTask(ParentTaskEntity task);

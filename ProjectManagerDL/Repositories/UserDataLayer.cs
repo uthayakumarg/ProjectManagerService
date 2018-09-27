@@ -3,7 +3,7 @@ using ProjectManagerEntity;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ProjectManagerDL.Repositories
+namespace ProjectManagerDL
 {
     public class UserDataLayer : IUserDataLayer
     {

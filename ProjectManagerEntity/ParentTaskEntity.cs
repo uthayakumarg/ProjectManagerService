@@ -8,7 +8,7 @@ namespace ProjectManagerEntity
 {
     public class ParentTaskEntity
     {
-        public int ParentTaskId { get; set; }
-        public string ParentTaskName { get; set; }
+        public int TaskId { get; set; }
+        public string TaskName { get; set; }
     }
 }

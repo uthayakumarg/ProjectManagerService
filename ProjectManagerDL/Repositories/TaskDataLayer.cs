@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Data.Entity.SqlServer;
+using System.Globalization;
 
 namespace ProjectManagerDL
 {
@@ -20,8 +21,8 @@ namespace ProjectManagerDL
             var tasksFromDb = (from task in _db.T_PRNT_TASK
                                select new ParentTaskEntity
                                {
-                                   ParentTaskId = task.PRNT_TASK_ID,
-                                   ParentTaskName = task.PRNT_TASK_NM
+                                   TaskId = task.PRNT_TASK_ID,
+                                   TaskName = task.PRNT_TASK_NM
                                }).ToList();
 
             return tasksFromDb;
@@ -31,35 +32,50 @@ namespace ProjectManagerDL
         {
             var newTask = new T_PRNT_TASK();
 
-            newTask.PRNT_TASK_NM = task.ParentTaskName;
+            newTask.PRNT_TASK_NM = task.TaskName;
 
             _db.T_PRNT_TASK.Add(newTask);
             _db.SaveChanges();
         }
 
-        public List<TaskEntity> GetAllTasks()
+        public List<TaskEntity> GetAllTasks(int projectId)
         {
             var tasksFromDb = (from t in _db.T_TASK
                                join p in _db.T_PRNT_TASK on t.PRNT_TASK_ID equals p.PRNT_TASK_ID into parents
                                from parent in parents.DefaultIfEmpty()
                                join pr in _db.T_PROJ on t.PROJ_ID equals pr.PROJ_ID
                                join u in _db.T_USR on t.USR_ID equals u.EMP_ID
-                               select new TaskEntity
+                               where t.PROJ_ID == projectId
+                               select new
                                {
                                    TaskId = t.TASK_ID,
                                    TaskName = t.TASK_NM,
                                    ParentId = t.PRNT_TASK_ID != null ? t.PRNT_TASK_ID.Value : 0,
                                    ParentName = parent.PRNT_TASK_NM,
                                    Priority = t.PRIORITY,
-                                   StartDate = (t.STRT_DT != null ?
-                                    SqlFunctions.DateName("day", t.STRT_DT) + "/" + SqlFunctions.DateName("month", t.STRT_DT) + "/" + SqlFunctions.DateName("year", t.STRT_DT) : ""),
-                                   EndDate = (t.END_DT != null ?
-                                    SqlFunctions.DateName("day", t.END_DT) + "/" + SqlFunctions.DateName("month", t.END_DT) + "/" + SqlFunctions.DateName("year", t.END_DT) : ""),
+                                   StartDate = t.STRT_DT,
+                                   EndDate = t.END_DT,
                                    ProjectId = t.PROJ_ID,
                                    ProjectName = pr.PROJ_NM,
                                    UserId = t.USR_ID,
                                    UserName = u.EMP_FRST_NM + " " + u.EMP_LST_NM,
                                    TaskStatus = t.STATUS
+                               })
+                               .ToList()
+                               .Select(x => new TaskEntity
+                               {
+                                   TaskId = x.TaskId,
+                                   TaskName = x.TaskName,
+                                   ParentId = x.ParentId,
+                                   ParentName = x.ParentName,
+                                   Priority = x.Priority,
+                                   StartDate = x.StartDate.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
+                                   EndDate = x.EndDate.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
+                                   ProjectId = x.ProjectId,
+                                   ProjectName = x.ProjectName,
+                                   UserId = x.UserId,
+                                   UserName = x.UserName,
+                                   TaskStatus = x.TaskStatus
                                }).ToList();
 
             return tasksFromDb;
