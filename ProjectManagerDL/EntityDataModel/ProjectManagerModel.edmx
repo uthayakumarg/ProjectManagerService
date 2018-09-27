@@ -1,0 +1,314 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FinalFSDModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="T_PRNT_TASK">
+          <Key>
+            <PropertyRef Name="PRNT_TASK_ID" />
+          </Key>
+          <Property Name="PRNT_TASK_ID" Type="int" Nullable="false" />
+          <Property Name="PRNT_TASK_NM" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_PROJ">
+          <Key>
+            <PropertyRef Name="PROJ_ID" />
+          </Key>
+          <Property Name="PROJ_ID" Type="int" Nullable="false" />
+          <Property Name="PROJ_NM" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="PROJ_STRT_DT" Type="date" />
+          <Property Name="PROJ_END_DT" Type="date" />
+          <Property Name="PROJ_PRIORITY" Type="int" Nullable="false" />
+          <Property Name="PROJ_MGR_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_TASK">
+          <Key>
+            <PropertyRef Name="TASK_ID" />
+          </Key>
+          <Property Name="TASK_ID" Type="int" Nullable="false" />
+          <Property Name="TASK_NM" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="PRNT_TASK_ID" Type="int" />
+          <Property Name="PRIORITY" Type="int" Nullable="false" />
+          <Property Name="STRT_DT" Type="date" Nullable="false" />
+          <Property Name="END_DT" Type="date" Nullable="false" />
+          <Property Name="PROJ_ID" Type="int" Nullable="false" />
+          <Property Name="USR_ID" Type="int" Nullable="false" />
+          <Property Name="STATUS" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_USR">
+          <Key>
+            <PropertyRef Name="EMP_ID" />
+          </Key>
+          <Property Name="EMP_ID" Type="int" Nullable="false" />
+          <Property Name="EMP_FRST_NM" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="EMP_LST_NM" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_T_PROJ_T_USR">
+          <End Role="T_USR" Type="Self.T_USR" Multiplicity="1" />
+          <End Role="T_PROJ" Type="Self.T_PROJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_USR">
+              <PropertyRef Name="EMP_ID" />
+            </Principal>
+            <Dependent Role="T_PROJ">
+              <PropertyRef Name="PROJ_MGR_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_TASK_T_PRNT_TASK">
+          <End Role="T_PRNT_TASK" Type="Self.T_PRNT_TASK" Multiplicity="0..1" />
+          <End Role="T_TASK" Type="Self.T_TASK" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_PRNT_TASK">
+              <PropertyRef Name="PRNT_TASK_ID" />
+            </Principal>
+            <Dependent Role="T_TASK">
+              <PropertyRef Name="PRNT_TASK_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_TASK_T_PROJ">
+          <End Role="T_PROJ" Type="Self.T_PROJ" Multiplicity="1" />
+          <End Role="T_TASK" Type="Self.T_TASK" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_PROJ">
+              <PropertyRef Name="PROJ_ID" />
+            </Principal>
+            <Dependent Role="T_TASK">
+              <PropertyRef Name="PROJ_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_TASK_T_USR">
+          <End Role="T_USR" Type="Self.T_USR" Multiplicity="1" />
+          <End Role="T_TASK" Type="Self.T_TASK" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_USR">
+              <PropertyRef Name="EMP_ID" />
+            </Principal>
+            <Dependent Role="T_TASK">
+              <PropertyRef Name="USR_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FinalFSDModelStoreContainer">
+          <EntitySet Name="T_PRNT_TASK" EntityType="Self.T_PRNT_TASK" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_PROJ" EntityType="Self.T_PROJ" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_TASK" EntityType="Self.T_TASK" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_USR" EntityType="Self.T_USR" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_T_PROJ_T_USR" Association="Self.FK_T_PROJ_T_USR">
+            <End Role="T_USR" EntitySet="T_USR" />
+            <End Role="T_PROJ" EntitySet="T_PROJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_TASK_T_PRNT_TASK" Association="Self.FK_T_TASK_T_PRNT_TASK">
+            <End Role="T_PRNT_TASK" EntitySet="T_PRNT_TASK" />
+            <End Role="T_TASK" EntitySet="T_TASK" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_TASK_T_PROJ" Association="Self.FK_T_TASK_T_PROJ">
+            <End Role="T_PROJ" EntitySet="T_PROJ" />
+            <End Role="T_TASK" EntitySet="T_TASK" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_TASK_T_USR" Association="Self.FK_T_TASK_T_USR">
+            <End Role="T_USR" EntitySet="T_USR" />
+            <End Role="T_TASK" EntitySet="T_TASK" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FinalFSDModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="T_PRNT_TASK">
+          <Key>
+            <PropertyRef Name="PRNT_TASK_ID" />
+          </Key>
+          <Property Name="PRNT_TASK_ID" Type="Int32" Nullable="false" />
+          <Property Name="PRNT_TASK_NM" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="T_TASK" Relationship="Self.FK_T_TASK_T_PRNT_TASK" FromRole="T_PRNT_TASK" ToRole="T_TASK" />
+        </EntityType>
+        <EntityType Name="T_PROJ">
+          <Key>
+            <PropertyRef Name="PROJ_ID" />
+          </Key>
+          <Property Name="PROJ_ID" Type="Int32" Nullable="false" />
+          <Property Name="PROJ_NM" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PROJ_STRT_DT" Type="DateTime" Precision="0" />
+          <Property Name="PROJ_END_DT" Type="DateTime" Precision="0" />
+          <Property Name="PROJ_PRIORITY" Type="Int32" Nullable="false" />
+          <Property Name="PROJ_MGR_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_USR" Relationship="Self.FK_T_PROJ_T_USR" FromRole="T_PROJ" ToRole="T_USR" />
+          <NavigationProperty Name="T_TASK" Relationship="Self.FK_T_TASK_T_PROJ" FromRole="T_PROJ" ToRole="T_TASK" />
+        </EntityType>
+        <EntityType Name="T_TASK">
+          <Key>
+            <PropertyRef Name="TASK_ID" />
+          </Key>
+          <Property Name="TASK_ID" Type="Int32" Nullable="false" />
+          <Property Name="TASK_NM" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PRNT_TASK_ID" Type="Int32" />
+          <Property Name="PRIORITY" Type="Int32" Nullable="false" />
+          <Property Name="STRT_DT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="END_DT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="PROJ_ID" Type="Int32" Nullable="false" />
+          <Property Name="USR_ID" Type="Int32" Nullable="false" />
+          <Property Name="STATUS" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="T_PRNT_TASK" Relationship="Self.FK_T_TASK_T_PRNT_TASK" FromRole="T_TASK" ToRole="T_PRNT_TASK" />
+          <NavigationProperty Name="T_PROJ" Relationship="Self.FK_T_TASK_T_PROJ" FromRole="T_TASK" ToRole="T_PROJ" />
+          <NavigationProperty Name="T_USR" Relationship="Self.FK_T_TASK_T_USR" FromRole="T_TASK" ToRole="T_USR" />
+        </EntityType>
+        <EntityType Name="T_USR">
+          <Key>
+            <PropertyRef Name="EMP_ID" />
+          </Key>
+          <Property Name="EMP_ID" Type="Int32" Nullable="false" />
+          <Property Name="EMP_FRST_NM" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EMP_LST_NM" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="T_PROJ" Relationship="Self.FK_T_PROJ_T_USR" FromRole="T_USR" ToRole="T_PROJ" />
+          <NavigationProperty Name="T_TASK" Relationship="Self.FK_T_TASK_T_USR" FromRole="T_USR" ToRole="T_TASK" />
+        </EntityType>
+        <Association Name="FK_T_TASK_T_PRNT_TASK">
+          <End Role="T_PRNT_TASK" Type="Self.T_PRNT_TASK" Multiplicity="0..1" />
+          <End Role="T_TASK" Type="Self.T_TASK" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_PRNT_TASK">
+              <PropertyRef Name="PRNT_TASK_ID" />
+            </Principal>
+            <Dependent Role="T_TASK">
+              <PropertyRef Name="PRNT_TASK_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_PROJ_T_USR">
+          <End Role="T_USR" Type="Self.T_USR" Multiplicity="1" />
+          <End Role="T_PROJ" Type="Self.T_PROJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_USR">
+              <PropertyRef Name="EMP_ID" />
+            </Principal>
+            <Dependent Role="T_PROJ">
+              <PropertyRef Name="PROJ_MGR_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_TASK_T_PROJ">
+          <End Role="T_PROJ" Type="Self.T_PROJ" Multiplicity="1" />
+          <End Role="T_TASK" Type="Self.T_TASK" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_PROJ">
+              <PropertyRef Name="PROJ_ID" />
+            </Principal>
+            <Dependent Role="T_TASK">
+              <PropertyRef Name="PROJ_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_TASK_T_USR">
+          <End Role="T_USR" Type="Self.T_USR" Multiplicity="1" />
+          <End Role="T_TASK" Type="Self.T_TASK" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_USR">
+              <PropertyRef Name="EMP_ID" />
+            </Principal>
+            <Dependent Role="T_TASK">
+              <PropertyRef Name="USR_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProjectManagerSQLConn" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="T_PRNT_TASK" EntityType="Self.T_PRNT_TASK" />
+          <EntitySet Name="T_PROJ" EntityType="Self.T_PROJ" />
+          <EntitySet Name="T_TASK" EntityType="Self.T_TASK" />
+          <EntitySet Name="T_USR" EntityType="Self.T_USR" />
+          <AssociationSet Name="FK_T_TASK_T_PRNT_TASK" Association="Self.FK_T_TASK_T_PRNT_TASK">
+            <End Role="T_PRNT_TASK" EntitySet="T_PRNT_TASK" />
+            <End Role="T_TASK" EntitySet="T_TASK" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_PROJ_T_USR" Association="Self.FK_T_PROJ_T_USR">
+            <End Role="T_USR" EntitySet="T_USR" />
+            <End Role="T_PROJ" EntitySet="T_PROJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_TASK_T_PROJ" Association="Self.FK_T_TASK_T_PROJ">
+            <End Role="T_PROJ" EntitySet="T_PROJ" />
+            <End Role="T_TASK" EntitySet="T_TASK" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_TASK_T_USR" Association="Self.FK_T_TASK_T_USR">
+            <End Role="T_USR" EntitySet="T_USR" />
+            <End Role="T_TASK" EntitySet="T_TASK" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FinalFSDModelStoreContainer" CdmEntityContainer="ProjectManagerSQLConn">
+          <EntitySetMapping Name="T_PRNT_TASK">
+            <EntityTypeMapping TypeName="FinalFSDModel.T_PRNT_TASK">
+              <MappingFragment StoreEntitySet="T_PRNT_TASK">
+                <ScalarProperty Name="PRNT_TASK_ID" ColumnName="PRNT_TASK_ID" />
+                <ScalarProperty Name="PRNT_TASK_NM" ColumnName="PRNT_TASK_NM" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_PROJ">
+            <EntityTypeMapping TypeName="FinalFSDModel.T_PROJ">
+              <MappingFragment StoreEntitySet="T_PROJ">
+                <ScalarProperty Name="PROJ_ID" ColumnName="PROJ_ID" />
+                <ScalarProperty Name="PROJ_NM" ColumnName="PROJ_NM" />
+                <ScalarProperty Name="PROJ_STRT_DT" ColumnName="PROJ_STRT_DT" />
+                <ScalarProperty Name="PROJ_END_DT" ColumnName="PROJ_END_DT" />
+                <ScalarProperty Name="PROJ_PRIORITY" ColumnName="PROJ_PRIORITY" />
+                <ScalarProperty Name="PROJ_MGR_ID" ColumnName="PROJ_MGR_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_TASK">
+            <EntityTypeMapping TypeName="FinalFSDModel.T_TASK">
+              <MappingFragment StoreEntitySet="T_TASK">
+                <ScalarProperty Name="TASK_ID" ColumnName="TASK_ID" />
+                <ScalarProperty Name="TASK_NM" ColumnName="TASK_NM" />
+                <ScalarProperty Name="PRNT_TASK_ID" ColumnName="PRNT_TASK_ID" />
+                <ScalarProperty Name="PRIORITY" ColumnName="PRIORITY" />
+                <ScalarProperty Name="STRT_DT" ColumnName="STRT_DT" />
+                <ScalarProperty Name="END_DT" ColumnName="END_DT" />
+                <ScalarProperty Name="PROJ_ID" ColumnName="PROJ_ID" />
+                <ScalarProperty Name="USR_ID" ColumnName="USR_ID" />
+                <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_USR">
+            <EntityTypeMapping TypeName="FinalFSDModel.T_USR">
+              <MappingFragment StoreEntitySet="T_USR">
+                <ScalarProperty Name="EMP_ID" ColumnName="EMP_ID" />
+                <ScalarProperty Name="EMP_FRST_NM" ColumnName="EMP_FRST_NM" />
+                <ScalarProperty Name="EMP_LST_NM" ColumnName="EMP_LST_NM" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

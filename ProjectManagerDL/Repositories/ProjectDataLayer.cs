@@ -1,0 +1,82 @@
+﻿using ProjectManagerDL.EntityDataModel;
+using ProjectManagerEntity;
+using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
+using System.Linq;
+
+namespace ProjectManagerDL
+{
+    public class ProjectDataLayer : IProjectDataLayer
+    {
+        ProjectManagerSQLConn _db;
+        public ProjectDataLayer()
+        {
+            _db = new ProjectManagerSQLConn();
+        }
+        public void AddProject(ProjectEntity project)
+        {
+            var newProj = new T_PROJ();
+
+            newProj.PROJ_NM = project.ProjectName;
+            newProj.PROJ_PRIORITY = project.Priority;
+            newProj.PROJ_MGR_ID = project.ProjectManagerId;
+            newProj.PROJ_STRT_DT = Utility.GetFormattedDate(project.StartDate);
+            newProj.PROJ_END_DT = Utility.GetFormattedDate(project.EndDate);
+
+            _db.T_PROJ.Add(newProj);
+            _db.SaveChanges();
+        }
+
+        public List<ProjectEntity> GetAllProjects()
+        {
+            var projects = (from proj in _db.T_PROJ
+                            join usr in _db.T_USR on proj.PROJ_MGR_ID equals usr.EMP_ID
+                            select new ProjectEntity
+                            {
+                                ProjectId = proj.PROJ_ID,
+                                ProjectName = proj.PROJ_NM,
+                                StartDate = (proj.PROJ_STRT_DT != null ? 
+                                    SqlFunctions.DateName("day", proj.PROJ_STRT_DT) + "/" + SqlFunctions.DateName("month", proj.PROJ_STRT_DT) + "/" + SqlFunctions.DateName("year", proj.PROJ_STRT_DT) : ""),
+                                EndDate = (proj.PROJ_END_DT != null ?
+                                    SqlFunctions.DateName("day", proj.PROJ_END_DT) + "/" + SqlFunctions.DateName("month", proj.PROJ_END_DT) + "/" + SqlFunctions.DateName("year", proj.PROJ_END_DT) : ""),
+                                Priority = proj.PROJ_PRIORITY,
+                                ProjectManagerId = proj.PROJ_MGR_ID,
+                                ProjectManagerFullName = usr.EMP_FRST_NM + " " + usr.EMP_LST_NM,
+                                TasksCount = (from t in _db.T_TASK where t.PROJ_ID == proj.PROJ_ID select t).Count(),
+                                Completed = (from tsk in _db.T_TASK where tsk.PROJ_ID == proj.PROJ_ID && tsk.STATUS == "C" select tsk).Count()
+                            }).ToList();
+
+            return projects;
+        }
+
+        public void SuspendProject(int projectId)
+        {
+            var projToDelete = (from p in _db.T_PROJ where p.PROJ_ID == projectId select p).FirstOrDefault();
+            if (projToDelete != null)
+            {
+                // First delete the tasks associated with the project
+                var tasksToDelete = (from t in _db.T_TASK where t.PROJ_ID == projectId select t).ToList();
+                if (tasksToDelete.Count > 0) { _db.T_TASK.RemoveRange(tasksToDelete); }
+
+                // Delete the project
+                _db.T_PROJ.Remove(projToDelete);
+                _db.SaveChanges();
+            }
+        }
+
+        public void UpdateProject(ProjectEntity project)
+        {
+            var projFromDb = (from proj in _db.T_PROJ
+                              where proj.PROJ_ID == project.ProjectId
+                              select proj).FirstOrDefault();
+
+            projFromDb.PROJ_NM = project.ProjectName;
+            projFromDb.PROJ_PRIORITY = project.Priority;
+            projFromDb.PROJ_MGR_ID = project.ProjectManagerId;
+            projFromDb.PROJ_STRT_DT = Utility.GetFormattedDate(project.StartDate);
+            projFromDb.PROJ_END_DT = Utility.GetFormattedDate(project.EndDate);
+
+            _db.SaveChanges();
+        }
+    }
+}

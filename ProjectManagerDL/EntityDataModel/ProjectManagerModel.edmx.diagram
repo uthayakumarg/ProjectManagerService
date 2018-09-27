@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ffea9eb8b9d24408bd9c73b9cd7fca78" Name="Diagram1">
+        <EntityTypeShape EntityType="FinalFSDModel.T_PRNT_TASK" Width="1.5" PointX="3" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinalFSDModel.T_PROJ" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinalFSDModel.T_TASK" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinalFSDModel.T_USR" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
+        <AssociationConnector Association="FinalFSDModel.FK_T_TASK_T_PRNT_TASK" ManuallyRouted="false" />
+        <AssociationConnector Association="FinalFSDModel.FK_T_PROJ_T_USR" ManuallyRouted="false" />
+        <AssociationConnector Association="FinalFSDModel.FK_T_TASK_T_PROJ" ManuallyRouted="false" />
+        <AssociationConnector Association="FinalFSDModel.FK_T_TASK_T_USR" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
