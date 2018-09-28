@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagerEntity", "Pro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagerBL", "ProjectManagerBL\ProjectManagerBL.csproj", "{1A283079-461A-45E2-A5BE-5668CBFFF764}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagerService.PerformanceTests", "ProjectManagerService.PerformanceTests\ProjectManagerService.PerformanceTests.csproj", "{7352491C-94EB-4176-9A6A-0D0525CA832E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{1A283079-461A-45E2-A5BE-5668CBFFF764}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A283079-461A-45E2-A5BE-5668CBFFF764}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A283079-461A-45E2-A5BE-5668CBFFF764}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7352491C-94EB-4176-9A6A-0D0525CA832E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7352491C-94EB-4176-9A6A-0D0525CA832E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7352491C-94EB-4176-9A6A-0D0525CA832E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7352491C-94EB-4176-9A6A-0D0525CA832E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
